@@ -11,37 +11,6 @@ export const lifecycle = [
     'childrenSaved', 'childrenPushed', 'childrenDeleted'
 ]
 
-// export class Schema extends Array {
-//     constructor(schema) {
-//         super(...schema.map(key => key.isKey ? key : new Key(key)))
-//         this.forEach(key => this.setKey(key))
-//     }
-//
-//     setKey(key) {
-//         key = this.k(key)
-//         console.log(key)
-//         if (this[key.name]) {
-//             this[key.name] = key
-//         } else
-//             Object.defineProperty(this, key.name, {
-//                 value: key,
-//                 enumerable: false,
-//                 configurable: true,
-//                 writable: true
-//             })
-//         return key
-//     }
-//
-//     k(key) {
-//         return key.isKey ? key : new Key(key)
-//     }
-//
-//     push(...items): number {
-//         items.map(key => this.setKey(key))
-//         return super.push(...items)
-//     }
-// }
-
 export class Schema extends Array {
     constructor(schema) {
         super(...schema.map(key => key.isKey ? key : new Key(key)))
@@ -51,40 +20,6 @@ export class Schema extends Array {
         return super.push(...schema.map(key => key.isKey ? key : new Key(key)))
     }
 }
-
-// export class ObjectKey extends String {
-//     public module
-//
-//     constructor(props, module) {
-//         super(props);
-//         if (module)
-//             Object.defineProperty(this, 'module', {
-//                 value: module,
-//                 enumerable: false,
-//                 configurable: false
-//             })
-//     }
-//
-//     then(fn, efn?) {
-//         const p = this.module.get(this).then(el => fn(el))
-//         if (efn)
-//             return p.catch(err => efn(err))
-//         return p
-//     }
-//
-//     catch(fn) {
-//         return this.module.get(this).catch(err => fn(err))
-//     }
-//
-//     get(user?) {
-//         return this.module.get(this, user)
-//     }
-// }
-
-//
-// export class $owner extends ObjectKey {
-//
-// }
 
 export class YinObject {
     public $id: string;
@@ -149,7 +84,7 @@ export class YinObject {
         this.$$.schema = model.$.schema
         const models = this.$api.yin.models;
         const typeModule = models[model.$id] || models[this.$id];
-        lifecycle.map(method => {
+        lifecycle.forEach(method => {
             if (typeModule && typeModule[method])
                 this[method] = typeModule[method]
             else

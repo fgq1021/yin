@@ -13,9 +13,10 @@ export class Key {
             if (!this.settings)
                 this.settings = {}
             // @ts-ignore
-            if (key.id) { // @ts-ignore
-                Object.defineProperty(this, 'id', {value: key.id, enumerable: false})
-            }
+            if (key.id)
+                { // @ts-ignore
+                    Object.defineProperty(this, 'id', {value: key.id, enumerable: false})
+                }
         } else {
             this.title = title
             this.name = key
