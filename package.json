@@ -1,0 +1,35 @@
+{
+  "name": "yin-core",
+  "version": "0.0.1",
+  "description": "An object system that helps you reference from the real world.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc ",
+    "dev": "tsc -w "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fgq1021/yin.git"
+  },
+  "keywords": [
+    "object",
+    "yin"
+  ],
+  "author": "方冠乔",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fgq1021/yin/issues"
+  },
+  "homepage": "https://github.com/fgq1021/yin#readme",
+  "devDependencies": {
+    "typescript": "^5.0.3"
+  },
+  "dependencies": {
+    "vue": "^3.2.47",
+    "lodash": "^4.17.21"
+  },
+  "files": [
+    "dist"
+  ]
+}
