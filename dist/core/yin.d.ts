@@ -1,4 +1,5 @@
 import * as vue from 'vue';
+export declare const yinRoot = "User.2902ac2f0000000000000000";
 export declare class Yin {
     me: any;
     modules: any[];
@@ -6,7 +7,7 @@ export declare class Yin {
     User: any;
     Model: any;
     Element: any;
-    models: any;
+    models: {};
     vue: typeof vue;
     structureType: string[];
     constructor(...modules: any[]);

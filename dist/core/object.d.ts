@@ -27,7 +27,7 @@ export declare class YinObject {
     get $place(): Place;
     constructor(object: any, module: any);
     $init(): Promise<void>;
-    $initModel(): Promise<void>;
+    $initModel(): Promise<boolean>;
     $readable(user: any): Promise<boolean>;
     $manageable(user: any): Promise<boolean>;
     get $owner(): any;

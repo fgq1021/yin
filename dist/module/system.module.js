@@ -33,7 +33,7 @@ class SystemModule extends module_1.Module {
             $manageable(user) {
                 var _a;
                 return __awaiter(this, void 0, void 0, function* () {
-                    return ((_a = this.$api.yin.me) === null || _a === void 0 ? void 0 : _a.$isRoot) && user.$id === this.$api.yin.me.$id;
+                    return ((_a = this.$api.yin.me) === null || _a === void 0 ? void 0 : _a.$isRoot) && (user.$id === this.$api.yin.me.$id);
                 });
             }
         };

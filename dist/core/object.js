@@ -14,6 +14,7 @@ const lodash_1 = require("lodash");
 const key_1 = require("./key");
 const place_1 = require("./place");
 const yin_status_1 = require("../lib/yin.status");
+const yin_console_1 = require("../lib/yin.console");
 exports.lifecycle = [
     'mounted', 'beforeDestroy',
     'created',
@@ -69,7 +70,6 @@ class YinObject {
         //     }
         // }
         Object.assign(this, object);
-        this.$schema;
     }
     $init() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -77,6 +77,7 @@ class YinObject {
                 yield this.$initModel();
             }
             catch (e) {
+                yin_console_1.yinConsole.warn('$init error', this["$title"], this.$place, e);
             }
             this.mounted();
         });
@@ -86,7 +87,7 @@ class YinObject {
             const model = yield this.$model();
             this.$$.schema = model.$.schema;
             const models = this.$api.yin.models;
-            const typeModule = models[model.$id] || models[this.$id];
+            const typeModule = models[this.$id] || models[model.$id];
             exports.lifecycle.forEach(method => {
                 if (typeModule && typeModule[method])
                     this[method] = typeModule[method];
@@ -108,6 +109,8 @@ class YinObject {
                     }
                 }
             }
+            this.$schema;
+            return true;
         });
     }
     $readable(user) {
@@ -139,7 +142,7 @@ class YinObject {
                 if (this.$.owner === u.$id)
                     return true;
             }
-            if (((_a = this.$api.yin.me) === null || _a === void 0 ? void 0 : _a.isRoot) && user.$id === this.$api.yin.me.$id)
+            if (((_a = this.$api.yin.me) === null || _a === void 0 ? void 0 : _a.isRoot) && (user.$id === this.$api.yin.me.$id))
                 return true;
             return Promise.reject(yin_status_1.yinStatus.UNAUTHORIZED('用户User #' + user.$id + " 没有修改" + this.$name + " #" + this.$id + " 的权限"));
         });
@@ -200,18 +203,16 @@ class YinObject {
                             return Promise.reject(e);
                         }
                     });
-                    res.create = (o, user) => {
+                    res.create = (o, user) => __awaiter(this, void 0, void 0, function* () {
                         console.log('res create', this.$id, k);
-                        return this.$createChild(o, k, user);
-                    };
+                        return yield this.$createChild(o, k, user);
+                    });
                     return res;
                 },
                 set(el) {
-                    if (el.$id)
-                        this.$children[k] = new place_1.Place(el.$name, el.$id);
-                    else
-                        this.$children[k] = el;
-                    return this;
+                    console.log('object set', el.$id);
+                    if (el)
+                        this.$children[k] = el.$place || el;
                 },
                 enumerable: true,
                 configurable: true
@@ -293,19 +294,20 @@ class YinObject {
             }
             if (!req.$title)
                 req.$title = k.title;
-            try {
-                const parentModel = yield this.$model();
-                if (parentModel.$id !== this.$id) {
-                    const models = yield parentModel[k.name]();
-                    if (models.$id)
-                        req.$model = models.$id;
-                    else if (models[0])
-                        req.$model = models[0].$id;
+            if (!req.$model)
+                try {
+                    const parentModel = yield this.$model();
+                    if (parentModel.$id !== this.$id) {
+                        const models = yield parentModel[k.name]();
+                        if (models.$id)
+                            req.$model = models.$id;
+                        else if (models[0])
+                            req.$model = models[0].$id;
+                    }
                 }
-            }
-            catch (e) {
-                // console.log(e)
-            }
+                catch (e) {
+                    // console.log(e)
+                }
             return this.$api.yin[module].create(req, user);
         });
     }

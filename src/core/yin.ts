@@ -3,6 +3,8 @@ import {Place} from "./place";
 import {yinStatus} from "../lib/yin.status";
 import {yinConsole} from "../lib/yin.console";
 
+export const yinRoot = 'User.2902ac2f0000000000000000'
+
 export class Yin {
     public me
     public modules = []
@@ -11,7 +13,7 @@ export class Yin {
     public Model
     public Element
     // 文件形式的模型
-    public models
+    public models = {}
     public vue = vue
     public structureType = ['Object', 'Array']
 
@@ -32,7 +34,7 @@ export class Yin {
     }
 
     async regModel(model) {
-        model.models.map(modelId => {
+        model.models.forEach(modelId => {
             this.models[modelId] = model;
             this.modules.map(async module => await module.regModel(modelId))
         })
