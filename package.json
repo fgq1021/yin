@@ -1,12 +1,13 @@
 {
   "name": "yin-core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An object system that helps you reference from the real world.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "link": "npm link"
   },
   "repository": {
     "type": "git",

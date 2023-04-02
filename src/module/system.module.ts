@@ -19,7 +19,7 @@ export class SystemModule extends Module {
             }
 
             async $manageable(user): Promise<boolean> {
-                return this.$api.yin.me?.$isRoot && user.$id === this.$api.yin.me.$id;
+                return this.$api.yin.me?.$isRoot && (user.$id === this.$api.yin.me.$id);
             }
         }
         this.init()

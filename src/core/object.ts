@@ -2,6 +2,7 @@ import {get} from 'lodash'
 import {Key} from "./key";
 import {Place} from "./place";
 import {yinStatus} from "../lib/yin.status";
+import {yinConsole} from "../lib/yin.console";
 
 export const lifecycle = [
     'mounted', 'beforeDestroy',
@@ -67,14 +68,13 @@ export class YinObject {
         //     }
         // }
         Object.assign(this, object)
-        this.$schema
     }
 
     async $init() {
         try {
             await this.$initModel()
         } catch (e) {
-
+            yinConsole.warn('$init error', this["$title"], this.$place, e)
         }
         this.mounted()
     }
@@ -83,7 +83,7 @@ export class YinObject {
         const model = await this.$model()
         this.$$.schema = model.$.schema
         const models = this.$api.yin.models;
-        const typeModule = models[model.$id] || models[this.$id];
+        const typeModule = models[this.$id] || models[model.$id];
         lifecycle.forEach(method => {
             if (typeModule && typeModule[method])
                 this[method] = typeModule[method]
@@ -105,6 +105,8 @@ export class YinObject {
                 }
             }
         }
+        this.$schema
+        return true
     }
 
     async $readable(user) {
@@ -136,7 +138,7 @@ export class YinObject {
             if (this.$.owner === u.$id)
                 return true
         }
-        if (this.$api.yin.me?.isRoot && user.$id === this.$api.yin.me.$id)
+        if (this.$api.yin.me?.isRoot && (user.$id === this.$api.yin.me.$id))
             return true
         return Promise.reject(yinStatus.UNAUTHORIZED('用户User #' + user.$id + " 没有修改" + this.$name + " #" + this.$id + " 的权限"))
     }
@@ -203,18 +205,16 @@ export class YinObject {
                                 return Promise.reject(e)
                             }
                         }
-                        res.create = (o, user?) => {
+                        res.create = async (o, user?) => {
                             console.log('res create', this.$id, k)
-                            return this.$createChild(o, k, user)
+                            return await this.$createChild(o, k, user)
                         }
                         return res
                     },
                     set(el: any) {
-                        if (el.$id)
-                            this.$children[k] = new Place(el.$name, el.$id)
-                        else
-                            this.$children[k] = el
-                        return this
+                        console.log('object set', el.$id)
+                        if (el)
+                            this.$children[k] = el.$place || el
                     },
                     enumerable: true,
                     configurable: true
@@ -244,7 +244,6 @@ export class YinObject {
             }
 
         for (let c in this.$children) {
-
             if (typeof this.$children[c] === 'string') {
                 st.push(new Key(c, 'Object'))
             } else
@@ -301,18 +300,19 @@ export class YinObject {
         }
         if (!req.$title)
             req.$title = k.title
-        try {
-            const parentModel = await this.$model()
-            if (parentModel.$id !== this.$id) {
-                const models = await parentModel[k.name]()
-                if (models.$id)
-                    req.$model = models.$id
-                else if (models[0])
-                    req.$model = models[0].$id
+        if (!req.$model)
+            try {
+                const parentModel = await this.$model()
+                if (parentModel.$id !== this.$id) {
+                    const models = await parentModel[k.name]()
+                    if (models.$id)
+                        req.$model = models.$id
+                    else if (models[0])
+                        req.$model = models[0].$id
+                }
+            } catch (e) {
+                // console.log(e)
             }
-        } catch (e) {
-            // console.log(e)
-        }
         return this.$api.yin[module].create(req, user)
     }
 

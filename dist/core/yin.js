@@ -9,14 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Yin = void 0;
+exports.Yin = exports.yinRoot = void 0;
 const vue = require("vue");
 const place_1 = require("./place");
 const yin_status_1 = require("../lib/yin.status");
 const yin_console_1 = require("../lib/yin.console");
+exports.yinRoot = 'User.2902ac2f0000000000000000';
 class Yin {
     constructor(...modules) {
         this.modules = [];
+        // 文件形式的模型
+        this.models = {};
         this.vue = vue;
         this.structureType = ['Object', 'Array'];
         // 系统事件
@@ -36,7 +39,7 @@ class Yin {
     }
     regModel(model) {
         return __awaiter(this, void 0, void 0, function* () {
-            model.models.map(modelId => {
+            model.models.forEach(modelId => {
                 this.models[modelId] = model;
                 this.modules.map((module) => __awaiter(this, void 0, void 0, function* () { return yield module.regModel(modelId); }));
             });

@@ -13,6 +13,7 @@ exports.UserModule = void 0;
 const module_1 = require("../core/module");
 const object_1 = require("../core/object");
 const module_schema_1 = require("../core/module.schema");
+const yin_status_1 = require("../lib/yin.status");
 class UserModule extends module_1.Module {
     constructor(yin, controller) {
         super(yin, controller);
@@ -54,10 +55,10 @@ class UserModule extends module_1.Module {
                 super.$owner = o;
             }
             $manage(user) {
-                return this.$api.children(this.$id + '.$manage', user);
+                return this.$api.children(this.$name + '.' + this.$id + '.$manage', user);
             }
             $read(user) {
-                return this.$api.children(this.$id + '.$read', user);
+                return this.$api.children(this.$name + '.' + this.$id + '.$read', user);
             }
             $readable(user) {
                 return __awaiter(this, void 0, void 0, function* () {
@@ -79,17 +80,17 @@ class UserModule extends module_1.Module {
         };
         this.init();
     }
-    create(object, user) {
-        const _super = Object.create(null, {
-            create: { get: () => super.create }
-        });
+    createRoot(object) {
         return __awaiter(this, void 0, void 0, function* () {
-            const u = yield _super.create.call(this, object, user);
-            if (!this.yin.me) {
-                this.yin.me = u;
-                u.$refresh();
+            if (!this.yin.me.$id) {
+                this.yin.me = yield this.yin.system.root.create(object, this.yin.me);
+                this.yin.me.$isRoot = true;
+                this.yin.me.systemConfig = this.yin.system;
+                yield this.yin.me.$save(this.yin.me);
+                return this.yin.me;
             }
-            return u;
+            else
+                return Promise.reject(yin_status_1.yinStatus.FORBIDDEN('根用户已经存在，再访问此接口将封IP'));
         });
     }
     authPassword(tel, password) {

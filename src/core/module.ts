@@ -40,11 +40,11 @@ export class Module {
             // if (new Date(el.$updatedAt) > new Date(element.$updatedAt)) {
             if (new Date(el.$updatedAt) > new Date(element.$updatedAt)) {
                 yinConsole.log("更新" + this.name + ":", el.$title, "#" + el.$id);
-                const oldType = element.$model;
-                Object.assign(this.list[id], el)
-                if (el.$model !== oldType) {
+                if (el.$model !== element.$.model) {
+                    Object.assign(this.list[id], el)
                     await this.list[id].$init();
-                }
+                } else
+                    Object.assign(this.list[id], el)
                 // this.api.eventSync(el, element);
             }
             // else {
@@ -149,14 +149,14 @@ export class Module {
     // el.pushParents = ['id.key',['id,key']]
     async create(object, user?) {
         user = this.u(user)
-        return await this.assign(await this.api.create(object, user))
+        return this.assign(await this.api.create(object, user))
     }
 
     // 更新时此选项会添加父元素的children????
     // el.pushParents = ['id.key',['id,key']]
     async save(object, option?, user?) {
         let o = option, u = user
-        if (!user && option && option.$name === 'User') {
+        if (!user && option && (option.$name === 'User' || option.$id || option.$isRoot)) {
             u = option
             o = {}
         }

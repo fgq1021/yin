@@ -1,6 +1,7 @@
 import {Module} from "../core/module";
 import {YinObject} from "../core/object";
 import {ModuleSchema} from "../core/module.schema";
+import {yinStatus} from "../lib/yin.status";
 
 export class UserModule extends Module {
     public name = 'User'
@@ -45,11 +46,11 @@ export class UserModule extends Module {
             }
 
             $manage(user?) {
-                return this.$api.children(this.$id + '.$manage', user)
+                return this.$api.children(this.$name + '.' + this.$id + '.$manage', user)
             }
 
             $read(user?) {
-                return this.$api.children(this.$id + '.$read', user)
+                return this.$api.children(this.$name + '.' + this.$id + '.$read', user)
             }
 
 
@@ -69,14 +70,17 @@ export class UserModule extends Module {
         this.init()
     }
 
-    async create(object, user?) {
-        const u = await super.create(object, user)
-        if (!this.yin.me) {
-            this.yin.me = u
-            u.$refresh()
-        }
-        return u
+    async createRoot(object) {
+        if (!this.yin.me.$id) {
+            this.yin.me = await this.yin.system.root.create(object, this.yin.me)
+            this.yin.me.$isRoot = true
+            this.yin.me.systemConfig = this.yin.system
+            await this.yin.me.$save(this.yin.me)
+            return this.yin.me
+        } else
+            return Promise.reject(yinStatus.FORBIDDEN('根用户已经存在，再访问此接口将封IP'))
     }
+
 
     async authPassword(tel: string, password: string) {
         const user = await this.api.authPassword(tel, password);
