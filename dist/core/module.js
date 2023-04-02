@@ -82,6 +82,7 @@ class Module {
             user = this.u(user);
             if (id) {
                 const el = yield this.getWaiter(id);
+                console.log(el);
                 if (yield el.$readable(user))
                     return el;
                 return Promise.reject(yin_status_1.yinStatus.UNAUTHORIZED((user ? user.username + "#" + user.$id : "匿名用户") + "没有查看id为 #" + id + " " + this.name + "的权限"));

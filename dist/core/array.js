@@ -236,7 +236,7 @@ class YinChildren {
             for (let index of notFoundFixedList) {
                 this.parent.$children[this.place.key].splice(index, 1);
             }
-            if (notFoundFixedList.length)
+            if (notFoundFixedList.length && !this.yin.isClient)
                 yield this.parent.$save(this.yin.me);
             notFoundList.reverse();
             for (let index of notFoundList) {

@@ -70,15 +70,8 @@ export class UserModule extends Module {
         this.init()
     }
 
-    async createRoot(object) {
-        if (!this.yin.me.$id) {
-            this.yin.me = await this.yin.system.root.create(object, this.yin.me)
-            this.yin.me.$isRoot = true
-            this.yin.me.systemConfig = this.yin.system
-            await this.yin.me.$save(this.yin.me)
-            return this.yin.me
-        } else
-            return Promise.reject(yinStatus.FORBIDDEN('根用户已经存在，再访问此接口将封IP'))
+    createRoot(object) {
+        return this.api.createRoot(object)
     }
 
 

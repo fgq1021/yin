@@ -13,7 +13,6 @@ exports.UserModule = void 0;
 const module_1 = require("../core/module");
 const object_1 = require("../core/object");
 const module_schema_1 = require("../core/module.schema");
-const yin_status_1 = require("../lib/yin.status");
 class UserModule extends module_1.Module {
     constructor(yin, controller) {
         super(yin, controller);
@@ -81,17 +80,7 @@ class UserModule extends module_1.Module {
         this.init();
     }
     createRoot(object) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.yin.me.$id) {
-                this.yin.me = yield this.yin.system.root.create(object, this.yin.me);
-                this.yin.me.$isRoot = true;
-                this.yin.me.systemConfig = this.yin.system;
-                yield this.yin.me.$save(this.yin.me);
-                return this.yin.me;
-            }
-            else
-                return Promise.reject(yin_status_1.yinStatus.FORBIDDEN('根用户已经存在，再访问此接口将封IP'));
-        });
+        return this.api.createRoot(object);
     }
     authPassword(tel, password) {
         return __awaiter(this, void 0, void 0, function* () {

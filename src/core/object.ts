@@ -74,8 +74,10 @@ export class YinObject {
         try {
             await this.$initModel()
         } catch (e) {
-            yinConsole.warn('$init error', this["$title"], this.$place, e)
+            if (e.status !== 'NOT_FOUND')
+                yinConsole.warn('$init error', this["$title"], this.$place, e)
         }
+        this.$schema
         this.mounted()
     }
 
@@ -105,7 +107,6 @@ export class YinObject {
                 }
             }
         }
-        this.$schema
         return true
     }
 

@@ -77,8 +77,10 @@ class YinObject {
                 yield this.$initModel();
             }
             catch (e) {
-                yin_console_1.yinConsole.warn('$init error', this["$title"], this.$place, e);
+                if (e.status !== 'NOT_FOUND')
+                    yin_console_1.yinConsole.warn('$init error', this["$title"], this.$place, e);
             }
+            this.$schema;
             this.mounted();
         });
     }
@@ -109,7 +111,6 @@ class YinObject {
                     }
                 }
             }
-            this.$schema;
             return true;
         });
     }
