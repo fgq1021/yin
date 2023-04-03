@@ -309,12 +309,9 @@ export class YinObject {
                 if (parentModel.$id !== this.$id) {
                     const models = await parentModel[k.name](), model = models.$id ? models : models[0].$id
                     if (model.$id) {
-                        for (let i in model) {
-                            if (i.match(/^$/)) {
-
-                            } else {
-                                req[i] = req[i] || model[i]
-                            }
+                        req.$model = model.$id
+                        for (let i in model.$data) {
+                            req[i] = req[i] || model.$data[i]
                         }
                     }
                 }
