@@ -301,11 +301,16 @@ class YinObject {
                 try {
                     const parentModel = yield this.$model();
                     if (parentModel.$id !== this.$id) {
-                        const models = yield parentModel[k.name]();
-                        if (models.$id)
-                            req.$model = models.$id;
-                        else if (models[0])
-                            req.$model = models[0].$id;
+                        const models = yield parentModel[k.name](), model = models.$id ? models : models[0].$id;
+                        if (model.$id) {
+                            for (let i in model) {
+                                if (i.match(/^$/)) {
+                                }
+                                else {
+                                    req[i] = req[i] || model[i];
+                                }
+                            }
+                        }
                     }
                 }
                 catch (e) {
