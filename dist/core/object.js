@@ -116,6 +116,8 @@ class YinObject {
     }
     $readable(user) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!user && this.$api.yin.client)
+                user = this.$api.yin.me;
             if (!this.$hide)
                 return true;
             if (this.$.owner === user.$id)
@@ -143,7 +145,7 @@ class YinObject {
                 if (this.$.owner === u.$id)
                     return true;
             }
-            if (((_a = this.$api.yin.me) === null || _a === void 0 ? void 0 : _a.isRoot) && (user.$id === this.$api.yin.me.$id))
+            if (((_a = this.$api.yin.me) === null || _a === void 0 ? void 0 : _a.$isRoot) && (user.$id === this.$api.yin.me.$id))
                 return true;
             return Promise.reject(yin_status_1.yinStatus.UNAUTHORIZED('用户User #' + user.$id + " 没有修改" + this.$name + " #" + this.$id + " 的权限"));
         });
@@ -295,7 +297,7 @@ class YinObject {
             }
             if (!req.$title)
                 req.$title = k.title;
-            if (!req.$model)
+            if (!req.$model && this.$name !== 'Model')
                 try {
                     const parentModel = yield this.$model();
                     if (parentModel.$id !== this.$id) {

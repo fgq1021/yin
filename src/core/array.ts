@@ -229,13 +229,16 @@ export class YinChildren {
             }
             i++;
         }
-        notFoundFixedList.reverse();
-        for (let index of notFoundFixedList) {
-            this.parent.$children[this.place.key].splice(index, 1);
-        }
 
-        if (notFoundFixedList.length && !this.yin.isClient)
-            await this.parent.$save(this.yin.me);
+        if (!this.yin.client) {
+            notFoundFixedList.reverse();
+            for (let index of notFoundFixedList) {
+                this.parent.$children[this.place.key].splice(index, 1);
+            }
+
+            if (notFoundFixedList.length)
+                await this.parent.$save(this.yin.me);
+        }
 
 
         notFoundList.reverse()

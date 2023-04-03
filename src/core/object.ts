@@ -111,6 +111,8 @@ export class YinObject {
     }
 
     async $readable(user) {
+        if (!user && this.$api.yin.client)
+            user = this.$api.yin.me
         if (!this.$hide)
             return true
         if (this.$.owner === user.$id)
@@ -139,7 +141,7 @@ export class YinObject {
             if (this.$.owner === u.$id)
                 return true
         }
-        if (this.$api.yin.me?.isRoot && (user.$id === this.$api.yin.me.$id))
+        if (this.$api.yin.me?.$isRoot && (user.$id === this.$api.yin.me.$id))
             return true
         return Promise.reject(yinStatus.UNAUTHORIZED('用户User #' + user.$id + " 没有修改" + this.$name + " #" + this.$id + " 的权限"))
     }
@@ -301,7 +303,7 @@ export class YinObject {
         }
         if (!req.$title)
             req.$title = k.title
-        if (!req.$model)
+        if (!req.$model && this.$name !== 'Model')
             try {
                 const parentModel = await this.$model()
                 if (parentModel.$id !== this.$id) {

@@ -232,12 +232,14 @@ class YinChildren {
                 }
                 i++;
             }
-            notFoundFixedList.reverse();
-            for (let index of notFoundFixedList) {
-                this.parent.$children[this.place.key].splice(index, 1);
+            if (!this.yin.client) {
+                notFoundFixedList.reverse();
+                for (let index of notFoundFixedList) {
+                    this.parent.$children[this.place.key].splice(index, 1);
+                }
+                if (notFoundFixedList.length)
+                    yield this.parent.$save(this.yin.me);
             }
-            if (notFoundFixedList.length && !this.yin.isClient)
-                yield this.parent.$save(this.yin.me);
             notFoundList.reverse();
             for (let index of notFoundList) {
                 this.children.splice(index, 1);
