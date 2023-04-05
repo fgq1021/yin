@@ -1,6 +1,6 @@
 {
   "name": "yin-core",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "An object system that helps you reference from the real world.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
