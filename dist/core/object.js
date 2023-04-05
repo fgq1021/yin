@@ -69,6 +69,9 @@ class YinObject {
         //         object['$' + i] = $[i]
         //     }
         // }
+        this.$assign(object);
+    }
+    $assign(object) {
         Object.assign(this, object);
     }
     $init() {
@@ -80,6 +83,7 @@ class YinObject {
                 if (e.status !== 'NOT_FOUND')
                     yin_console_1.yinConsole.warn('$init error', this["$title"], this.$place, e);
             }
+            // 在此处读一下，好刷新不同key的功能
             this.$schema;
             this.mounted();
         });
@@ -343,7 +347,7 @@ class YinObject {
     }
     'childrenSaved'(user) {
     }
-    'childrenPushed'(user) {
+    'childrenPushed'(key, id) {
     }
     'childrenDeleted'(user) {
     }
